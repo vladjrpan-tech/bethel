@@ -310,25 +310,80 @@ body {
 
 <script>
 // Dados fornecidos da planilha
-const dadosBrutos = [
-  { mes: "AGOSTO", data: "08/08", evento: "1ª Ritualística", obs: "Aniversário do Bethel, Cerimônia em homenagem ao Dia dos Pais" },
-  { mes: "AGOSTO", data: "15/08", evento: "Visita", obs: "Loja Fraternidade do Leste (Loja do Tio Dida)" },
-  { mes: "AGOSTO", data: "31/08", evento: "Visita", obs: "Loja Templários Paulista ( loja tio Amansio)" },
-  { mes: "AGOSTO", data: "22/08", evento: "2ª Ritualística", obs: "Homenagem ao Dia do Maçom" },
-  { mes: "SETEMBRO", data: "12/09", evento: "3ª Ritualística", obs: "" },
-  { mes: "SETEMBRO", data: "15/09", evento: "Visita", obs: "Templates do Sul (loja do tio andres)" },
-  { mes: "SETEMBRO", data: "26/09", evento: "4ª Ritualística", obs: "Associação" },
-  { mes: "OUTUBRO", data: "10/10", evento: "5ª Ritualística", obs: "" },
-  { mes: "OUTUBRO", data: "24/10", evento: "6ª Ritualística", obs: "" },
-  { mes: "OUTUBRO", data: "31/10", evento: "Cerimônia de Maioridade", obs: "Adoção das abelhinhas (pública)" },
-  { mes: "NOVEMBRO", data: "14/11", evento: "7ª Ritualística", obs: "Eleição das Oficiais" },
-  { mes: "NOVEMBRO", data: "28/11", evento: "8ª Ritualística", obs: "Mês do Dia da Reflexão" },
-  { mes: "DEZEMBRO", data: "12/12", evento: "9ª Ritualística", obs: "" },
-  { mes: "DEZEMBRO", data: "19/12", evento: "Instalação", obs: "" }
-];
+const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQoLwALa0byceSMwbu_D8raOh-A3jNAMriX1WX4UmAxF-ebcVySG6KGQ0tUh6X3ljrM3E_x3GTdr-N9/pub?gid=0&single=true&output=csv";
+
+let dadosBrutos = [];
 
 let mesesDisponiveis = [];
 let mesSelecionado = "";
+
+// Parser CSV com suporte a campos entre aspas e vírgulas nas observações.
+function csvParse(txt) {
+  const rows = [];
+  let row = [];
+  let field = "";
+  let quoted = false;
+
+  for (let i = 0; i < txt.length; i++) {
+    const ch = txt[i];
+    const next = txt[i + 1];
+
+    if (ch === '"' && quoted && next === '"') {
+      field += '"';
+      i++;
+    } else if (ch === '"') {
+      quoted = !quoted;
+    } else if (ch === ',' && !quoted) {
+      row.push(field.trim());
+      field = "";
+    } else if ((ch === "\n" || ch === "\r") && !quoted) {
+      if (ch === "\r" && next === "\n") i++;
+      row.push(field.trim());
+      field = "";
+      if (row.some(v => v !== "")) rows.push(row);
+      row = [];
+    } else {
+      field += ch;
+    }
+  }
+
+  if (field !== "" || row.length) {
+    row.push(field.trim());
+    if (row.some(v => v !== "")) rows.push(row);
+  }
+
+  return rows;
+}
+
+function csvParaDados(csv) {
+  const rows = csvParse(csv);
+  if (rows.length < 2) return [];
+
+  const header = rows[0].map(v => v
+    .replace(/^\uFEFF/, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+  );
+
+  const iMes = header.findIndex(v => v === "mes");
+  const iData = header.findIndex(v => v === "data");
+  const iEvento = header.findIndex(v => v.includes("evento"));
+  const iObs = header.findIndex(v => v.includes("observacoes"));
+
+  if (iMes < 0 || iData < 0 || iEvento < 0) {
+    throw new Error("Cabeçalhos esperados não encontrados na planilha.");
+  }
+
+  return rows.slice(1).map(r => ({
+    mes: (r[iMes] || "").trim().toUpperCase(),
+    data: (r[iData] || "").trim(),
+    evento: (r[iEvento] || "").trim(),
+    obs: iObs >= 0 ? (r[iObs] || "").trim() : ""
+  })).filter(item => item.mes && item.data && item.evento);
+}
+
 
 function isMobile() {
   return window.innerWidth <= 768;
@@ -458,7 +513,26 @@ function renderizarEventos() {
   });
 }
 
-inicializar();
+async function carregarDados() {
+  try {
+    const resposta = await fetch(`${CSV}&_=${Date.now()}`, { cache: "no-store" });
+    if (!resposta.ok) throw new Error(`Erro HTTP ${resposta.status}`);
+
+    const csv = await resposta.text();
+    dadosBrutos = csvParaDados(csv);
+
+    if (!dadosBrutos.length) throw new Error("Nenhum evento encontrado na planilha.");
+
+    inicializar();
+  } catch (erro) {
+    console.error("Erro ao carregar o Google Sheets:", erro);
+    const mensagem = `<div class="empty">Não foi possível carregar a agenda.<br><small style="font-family:Inter,sans-serif;font-size:10px;opacity:.7">Verifique se a planilha continua publicada na Web.</small></div>`;
+    document.getElementById("m-list").innerHTML = mensagem;
+    document.getElementById("d-events").innerHTML = mensagem;
+  }
+}
+
+carregarDados();
 </script>
 </body>
 </html>
