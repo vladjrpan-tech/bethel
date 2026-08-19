@@ -225,6 +225,64 @@ body {
 .d-motto { font-family:"Cinzel",serif; font-size:11px; color:var(--red-mid); font-weight:700; letter-spacing:.1em; }
 .d-freg  { font-size:10px; color:var(--text-muted); }
 .empty { text-align:center; padding:32px 0; color:var(--text-muted); font-family:"Cinzel",serif; font-size:12px; letter-spacing:.08em; }
+
+/* ═══════════════════════════
+   PRÓXIMO EVENTO — destaque
+═══════════════════════════ */
+@keyframes goldPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,151,26,0), 0 4px 16px rgba(139,26,13,0.08); background: #fffbf0; }
+  50%      { box-shadow: 0 0 0 6px rgba(201,151,26,0.18), 0 6px 24px rgba(201,151,26,0.15); background: #fff8e1; }
+}
+@keyframes shimmer {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+@keyframes badgePop {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%     { transform: scale(1.08); opacity: 0.85; }
+}
+
+.next-event {
+  animation: goldPulse 2.2s ease-in-out infinite;
+  border: 1.5px solid rgba(201,151,26,0.5) !important;
+  overflow: visible !important;
+}
+.next-event::before {
+  background: linear-gradient(180deg, var(--accent-gold), #a06a00) !important;
+  width: 5px !important;
+}
+/* shimmer sweep across the card */
+.next-event::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; width: 40%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.45), transparent);
+  animation: shimmer 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+/* gold date box */
+.next-event .m-date-box,
+.next-event .d-date-box {
+  background: linear-gradient(135deg, #ffe9a0, #f5c842);
+}
+.next-event .m-date-num,
+.next-event .d-date-num {
+  color: #7a4e00;
+}
+/* badge "PRÓXIMO" */
+.next-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--accent-gold);
+  color: #3A1A00;
+  font-family: "Cinzel", serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .12em;
+  padding: 2px 8px; border-radius: 20px;
+  margin-top: 5px;
+  animation: badgePop 2.2s ease-in-out infinite;
+  width: fit-content;
+}
+.next-badge::before { content: "★"; font-size: 8px; }
 </style>
 </head>
 <body>
@@ -233,9 +291,9 @@ body {
   <div class="m-bar">
     <img class="m-logo" src="logo-beatriz-pereira.png" alt="Bethel 14 Logo">
     <div class="m-titles">
-      <div class="m-sub">Agenda do Bethel</div>
+      <div class="m-sub">Agenda do Bethel - 36ª GESTÃO</div>
       <div class="m-title">Bethel 14 Agnes de São Paulo</div>
-      <div class="m-org">36ª GESTÃO - "Filhas de Jó Internacional"</div>
+      <div class="m-org">Filhas de Jó Internacional</div>
     </div>
   </div>
   <div class="m-months" id="m-months"></div>
@@ -264,7 +322,7 @@ body {
     <div class="d-head">
       <img class="d-logo" src="logo-beatriz-pereira.png" alt="Bethel 14 Logo">
       <div class="d-head-text">
-        <div class="d-sub">Agenda de Eventos e Reuniões</div>
+        <div class="d-sub">Agenda de Eventos e Reuniões - 36ª GESTÃO</div>
         <div class="d-title">Bethel 14 Agnes de São Paulo</div>
         <div class="d-org">Filhas de Jó Internacional</div>
         <div class="d-badge">
@@ -365,6 +423,29 @@ function renderizarFiltros() {
   });
 }
 function selecionarMes(mes) { mesSelecionado = mes; renderizarFiltros(); renderizarEventos(); }
+
+// Retorna o índice (dentro de `lista`) do próximo evento a acontecer (>= hoje)
+function encontrarProximoIdx(lista) {
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  const ano = hoje.getFullYear();
+  let proximoIdx = -1;
+  let proximaData = null;
+  lista.forEach((item, i) => {
+    const partes = item.data.split('/').map(Number);
+    if (partes.length < 2) return;
+    const [dia, mes] = partes;
+    // Tenta ano atual; se já passou, tenta próximo ano
+    let d = new Date(ano, mes - 1, dia);
+    if (d < hoje) d = new Date(ano + 1, mes - 1, dia);
+    if (proximaData === null || d < proximaData) {
+      proximaData = d;
+      proximoIdx = i;
+    }
+  });
+  return proximoIdx;
+}
+
 function renderizarEventos() {
   let eventos = mesSelecionado === 'TODOS' ? [...dadosBrutos] : dadosBrutos.filter(d => d.mes === mesSelecionado);
   eventos.sort((a, b) => {
@@ -384,14 +465,34 @@ function renderizarEventos() {
     const msg = '<div class="empty">Nenhum evento registrado para este período.</div>';
     mList.innerHTML = msg; dEvents.innerHTML = msg; return;
   }
-  eventos.forEach(item => {
+
+  const proximoIdx = encontrarProximoIdx(eventos);
+  const badge = `<span class="next-badge">PRÓXIMO EVENTO</span>`;
+
+  eventos.forEach((item, i) => {
+    const isProximo = i === proximoIdx;
+    const extraClass = isProximo ? ' next-event' : '';
+
     const mCard = document.createElement('div');
-    mCard.className = 'm-card';
-    mCard.innerHTML = `<div class="m-date-box"><div class="m-date-num">${item.data}</div></div><div class="m-info"><div class="m-name">${item.evento}</div>${item.obs ? `<div class="m-obs">${item.obs}</div>` : ''}</div>`;
+    mCard.className = 'm-card' + extraClass;
+    mCard.innerHTML = `
+      <div class="m-date-box"><div class="m-date-num">${item.data}</div></div>
+      <div class="m-info">
+        <div class="m-name">${item.evento}</div>
+        ${item.obs ? `<div class="m-obs">${item.obs}</div>` : ''}
+        ${isProximo ? badge : ''}
+      </div>`;
     mList.appendChild(mCard);
+
     const dEvent = document.createElement('div');
-    dEvent.className = 'd-event';
-    dEvent.innerHTML = `<div class="d-date-box"><div class="d-date-num">${item.data}</div></div><div class="d-einfo"><div class="d-ename">${item.evento}</div>${item.obs ? `<div class="d-eobs">${item.obs}</div>` : ''}</div>`;
+    dEvent.className = 'd-event' + extraClass;
+    dEvent.innerHTML = `
+      <div class="d-date-box"><div class="d-date-num">${item.data}</div></div>
+      <div class="d-einfo">
+        <div class="d-ename">${item.evento}</div>
+        ${item.obs ? `<div class="d-eobs">${item.obs}</div>` : ''}
+        ${isProximo ? badge : ''}
+      </div>`;
     dEvents.appendChild(dEvent);
   });
 }
