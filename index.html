@@ -141,6 +141,7 @@ body {
 .m-info { min-width: 0; overflow-wrap: anywhere; }
 .m-name { font-size:13px; font-weight:600; color:var(--text-dark); line-height:1.3; }
 .m-obs  { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.3; overflow-wrap:anywhere; }
+.m-time { font-size:10px; color:var(--red-mid); font-weight:700; margin-top:4px; letter-spacing:.02em; }
 /* footer */
 .m-foot {
   flex-shrink:0;
@@ -214,6 +215,7 @@ body {
 .d-event:hover { transform:translateX(2px); box-shadow:0 4px 12px rgba(139,26,13,0.09); }
 .d-date-box { background:var(--red-soft); border-radius:8px; padding:8px 6px; text-align:center; }
 .d-date-num { font-family:"Cinzel",serif; font-size:16px; font-weight:700; color:var(--red-mid); }
+.d-time { font-size:10px; color:var(--red-mid); font-weight:700; margin-top:4px; letter-spacing:.02em; }
 .d-einfo { min-width:0; }
 .d-ename { font-size:15px; font-weight:600; color:var(--text-dark); line-height:1.3; }
 .d-eobs  { font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.3; }
@@ -375,12 +377,14 @@ function csvParaDados(csv) {
   const iData = header.findIndex(v => v === "data");
   const iEvento = header.findIndex(v => v.includes("evento"));
   const iObs = header.findIndex(v => v.includes("observacoes"));
+  const iHorario = header.findIndex(v => v.includes("horario") || v.includes("hora"));
   if (iMes < 0 || iData < 0 || iEvento < 0) throw new Error("Cabeçalhos não encontrados.");
   return rows.slice(1).map(r => ({
     mes: (r[iMes]||"").trim().toUpperCase(),
     data: (r[iData]||"").trim(),
     evento: (r[iEvento]||"").trim(),
-    obs: iObs >= 0 ? (r[iObs]||"").trim() : ""
+    obs: iObs >= 0 ? (r[iObs]||"").trim() : "",
+    horario: iHorario >= 0 ? (r[iHorario]||"").trim() : ""
   })).filter(item => item.mes && item.data && item.evento);
 }
 function isMobile() { return window.innerWidth <= 768; }
@@ -478,7 +482,10 @@ function renderizarEventos() {
     const mCard = document.createElement('div');
     mCard.className = 'm-card' + extraClass;
     mCard.innerHTML = `
-      <div class="m-date-box"><div class="m-date-num">${item.data}</div></div>
+      <div class="m-date-box">
+        <div class="m-date-num">${item.data}</div>
+        ${item.horario ? `<div class="m-time">⏰ ${item.horario}</div>` : ''}
+      </div>
       <div class="m-info">
         <div class="m-name">${item.evento}</div>
         ${item.obs ? `<div class="m-obs">${item.obs}</div>` : ''}
@@ -489,7 +496,10 @@ function renderizarEventos() {
     const dEvent = document.createElement('div');
     dEvent.className = 'd-event' + extraClass;
     dEvent.innerHTML = `
-      <div class="d-date-box"><div class="d-date-num">${item.data}</div></div>
+      <div class="d-date-box">
+        <div class="d-date-num">${item.data}</div>
+        ${item.horario ? `<div class="d-time">⏰ ${item.horario}</div>` : ''}
+      </div>
       <div class="d-einfo">
         <div class="d-ename">${item.evento}</div>
         ${item.obs ? `<div class="d-eobs">${item.obs}</div>` : ''}
