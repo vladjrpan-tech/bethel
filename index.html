@@ -7,29 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --purple-dark:#2a0845;
-  --purple-mid:#4b126d;
-  --purple-light:#642b8f;
-  --purple-soft:#f3ebfc;
+  --red-dark:#3A0C05;
+  --red-mid:#8B1A0D;
+  --red-light:#A52018;
+  --red-soft:#FDF0E0;
   --white:#ffffff;
-  --text-dark:#1d132b;
-  --text-muted:#7e6b94;
-  --border-light:rgba(75, 18, 109, 0.12);
-  --accent-gold:#d4af37;
+  --text-dark:#1A0805;
+  --text-muted:#8B6A5A;
+  --border-light:rgba(139,26,13,0.14);
+  --accent-gold:#C9971A;
 }
-
 html { height: 100%; }
 body {
   min-height: 100%;
-  background: #f8f5fa;
+  background: #f9f3ec;
   font-family: "Inter", sans-serif;
   color: var(--text-dark);
   overflow-x: hidden;
   overflow-y: auto;
 }
-
 .app-desktop {
   display: none;
   min-height: 100vh;
@@ -38,9 +35,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  background: #f4eff8;
+  background: #f4ede2;
 }
-
 /* ═══════════════════════════
    MOBILE — full screen app
 ═══════════════════════════ */
@@ -49,25 +45,29 @@ body {
   position: fixed;
   inset: 0;
   flex-direction: column;
-  background: #f8f5fa;
+  background: #f9f3ec;
 }
 .app-mobile.on { display: flex; }
-
 /* top bar */
 .m-bar {
   flex-shrink: 0;
-  background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
-  padding: env(safe-area-inset-top, 0px) 14px 12px;
-  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, var(--red-dark) 0%, var(--red-mid) 100%);
+  padding: env(safe-area-inset-top, 0px) 16px 14px;
+  display: flex; align-items: center; gap: 14px;
   border-bottom: 2px solid var(--accent-gold);
-  box-shadow: 0 4px 12px rgba(42, 8, 69, 0.15);
+  box-shadow: 0 4px 16px rgba(58, 12, 5, 0.25);
 }
-.m-logo { width: 44px; height: 44px; object-fit:contain; flex-shrink:0; background: #fff; padding: 2px; border-radius: 50%; }
+.m-logo {
+  width: 64px; height: 64px; object-fit:contain; flex-shrink:0;
+  background: radial-gradient(circle, #fff 70%, #f5e8c8 100%);
+  padding: 3px; border-radius: 50%;
+  border: 2px solid var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(201,151,26,0.25), 0 4px 12px rgba(0,0,0,0.3);
+}
 .m-titles { flex:1; min-width:0; }
-.m-sub  { font-size:9px; font-weight: 600; letter-spacing:.15em; color: var(--accent-gold); text-transform: uppercase; }
-.m-title  { font-family:"Cinzel",serif; font-size:15px; font-weight:700; color:var(--white); line-height:1.2; }
-.m-org { font-size:10px; color:var(--purple-soft); opacity: 0.9; }
-
+.m-sub  { font-size:9px; font-weight:700; letter-spacing:.2em; color:var(--accent-gold); text-transform:uppercase; margin-bottom:2px; }
+.m-title  { font-family:"Cinzel",serif; font-size:16px; font-weight:700; color:var(--white); line-height:1.2; }
+.m-org { font-size:10px; color:var(--red-soft); opacity:0.85; margin-top:2px; }
 /* month / filter tabs */
 .m-months {
   flex-shrink: 0;
@@ -80,24 +80,22 @@ body {
 .m-months::-webkit-scrollbar { display:none; }
 .m-pill {
   flex-shrink:0;
-  background: var(--purple-soft); border: 1px solid var(--border-light);
-  color: var(--purple-mid); font-size:12px; font-weight:600;
+  background: var(--red-soft); border: 1px solid var(--border-light);
+  color: var(--red-mid); font-size:12px; font-weight:600;
   padding: 6px 14px; border-radius:20px; cursor:pointer;
   transition: all .15s; white-space:nowrap;
 }
-.m-pill.on { background:var(--purple-mid); border-color:var(--purple-mid); color:var(--white); }
-
+.m-pill.on { background:var(--red-mid); border-color:var(--red-mid); color:var(--white); }
 /* date label */
 .m-datelabel {
   flex-shrink: 0;
-  background: var(--purple-soft);
+  background: var(--red-soft);
   padding: 8px 16px;
   display: flex; align-items:center; justify-content:center; gap:8px;
   border-bottom: 1px solid var(--border-light);
 }
-.m-orn  { color:var(--purple-mid); font-size:10px; }
-.m-wday { font-family:"Cinzel",serif; font-size:13px; font-weight:700; color:var(--purple-mid); text-transform: uppercase; }
-
+.m-orn  { color:var(--accent-gold); font-size:10px; }
+.m-wday { font-family:"Cinzel",serif; font-size:13px; font-weight:700; color:var(--red-mid); text-transform: uppercase; }
 /* count */
 .m-count {
   flex-shrink:0;
@@ -105,8 +103,7 @@ body {
   padding: 8px 16px 4px;
 }
 .m-count hr { flex:1; border:none; border-top:1px solid var(--border-light); }
-.m-count span { font-family:"Cinzel",serif; font-size:10px; color:var(--purple-mid); font-weight:700; letter-spacing:.08em; white-space:nowrap; }
-
+.m-count span { font-family:"Cinzel",serif; font-size:10px; color:var(--red-mid); font-weight:700; letter-spacing:.08em; white-space:nowrap; }
 /* event list — scrollable */
 .m-list {
   flex: 1;
@@ -115,7 +112,6 @@ body {
   display: flex; flex-direction:column; gap:8px;
   overscroll-behavior: contain;
 }
-
 /* event card */
 .m-card {
   background: var(--white);
@@ -126,42 +122,25 @@ body {
   position:relative; overflow:hidden;
   flex-shrink: 0;
   min-height: 58px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
 .m-card::before {
   content:""; position:absolute; left:0; top:0; bottom:0;
-  width:4px; background:var(--purple-mid); border-radius:4px 0 0 4px;
+  width:4px; background:var(--red-mid); border-radius:4px 0 0 4px;
 }
-
 .m-date-box {
-  background: var(--purple-soft);
+  background: var(--red-soft);
   border-radius: 8px;
   padding: 6px 4px;
   text-align: center;
 }
 .m-date-num {
   font-family:"Cinzel",serif; font-size:15px; font-weight:700;
-  color:var(--purple-mid); line-height: 1;
+  color:var(--red-mid); line-height: 1;
 }
-
-.m-info {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-.m-name {
-  font-size:13px;
-  font-weight:600;
-  color:var(--text-dark);
-  line-height:1.3;
-}
-.m-obs {
-  font-size:11px;
-  color:var(--text-muted);
-  margin-top:4px;
-  line-height:1.3;
-  overflow-wrap:anywhere;
-}
-
+.m-info { min-width: 0; overflow-wrap: anywhere; }
+.m-name { font-size:13px; font-weight:600; color:var(--text-dark); line-height:1.3; }
+.m-obs  { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.3; overflow-wrap:anywhere; }
 /* footer */
 .m-foot {
   flex-shrink:0;
@@ -170,93 +149,85 @@ body {
   padding: 10px 16px env(safe-area-inset-bottom, 0px);
   display:flex; justify-content:space-between; align-items:center;
 }
-.m-motto  { font-family:"Cinzel",serif; font-size:10px; color:var(--purple-mid); font-weight:700; letter-spacing:.08em; }
-
+.m-motto { font-family:"Cinzel",serif; font-size:10px; color:var(--red-mid); font-weight:700; letter-spacing:.08em; }
 /* ═══════════════════════════
    DESKTOP
 ═══════════════════════════ */
-.app-desktop {
-  display: none;
-  min-height: 100vh;
-  padding: 32px 24px 48px;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  background: #f4eff8;
-}
 .app-desktop.on { display: flex; }
-
 .d-sel { width:100%; max-width:680px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.d-sel label { font-family:"Cinzel",serif; color:var(--purple-mid); font-size:13px; font-weight:700; letter-spacing:.05em; }
+.d-sel label { font-family:"Cinzel",serif; color:var(--red-mid); font-size:13px; font-weight:700; letter-spacing:.05em; }
 .d-pill {
   background:var(--white); border:1px solid var(--border-light);
   color:var(--text-muted); font-size:12px; font-weight:600; padding:6px 16px;
   border-radius:20px; cursor:pointer; transition:all .2s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-.d-pill:hover { border-color:var(--purple-light); color:var(--purple-mid); }
-.d-pill.on { background:var(--purple-mid); border-color:var(--purple-mid); color:var(--white); }
-
+.d-pill:hover { border-color:var(--red-light); color:var(--red-mid); }
+.d-pill.on { background:var(--red-mid); border-color:var(--red-mid); color:var(--white); }
 .d-card {
   width:100%; max-width:680px;
   background:var(--white); border-radius:18px; overflow:hidden;
-  box-shadow:0 12px 32px rgba(75, 18, 109, 0.08), 0 0 0 1px var(--border-light);
+  box-shadow:0 12px 32px rgba(139,26,13,0.1), 0 0 0 1px var(--border-light);
 }
 .d-head {
-  background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
-  padding:32px 32px 24px; position:relative; overflow:hidden;
-  border-bottom:3px solid var(--accent-gold);
-  display:flex; flex-direction:column; align-items:center; gap:8px;
+  background: linear-gradient(135deg, var(--red-dark) 0%, var(--red-mid) 100%);
+  padding: 28px 32px 24px; position:relative; overflow:hidden;
+  border-bottom: 3px solid var(--accent-gold);
+  display: flex; flex-direction: row; align-items: center; gap: 28px;
 }
-.d-logo { width:90px; height: 90px; object-fit: contain; background: #fff; padding: 4px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-.d-sub  { font-family:"Cinzel",serif; font-size:11px; font-weight:700; letter-spacing:.22em; color:var(--accent-gold); text-transform: uppercase; }
-.d-title  { font-family:"Cinzel",serif; font-size:24px; font-weight:700; color:var(--white); text-align:center; }
-.d-org   { font-size:12px; letter-spacing:.1em; color:var(--purple-soft); opacity:0.9; }
-
+/* decorative diagonal shine */
+.d-head::after {
+  content:""; position:absolute; top:0; right:0; bottom:0;
+  width:40%; background: linear-gradient(to left, rgba(255,255,255,0.04), transparent);
+  pointer-events:none;
+}
+.d-logo {
+  width: 110px; height: 110px; flex-shrink:0;
+  object-fit:contain;
+  background: radial-gradient(circle, #fff 65%, #f5e8c8 100%);
+  padding: 5px; border-radius: 50%;
+  border: 3px solid var(--accent-gold);
+  box-shadow: 0 0 0 4px rgba(201,151,26,0.2), 0 8px 24px rgba(0,0,0,0.35);
+}
+.d-head-text { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.d-sub  { font-family:"Cinzel",serif; font-size:11px; font-weight:700; letter-spacing:.25em; color:var(--accent-gold); text-transform:uppercase; }
+.d-title  { font-family:"Cinzel",serif; font-size:26px; font-weight:700; color:var(--white); line-height:1.2; }
+.d-org   { font-size:12px; letter-spacing:.08em; color:var(--red-soft); opacity:0.85; }
 .d-badge  {
-  display:flex; align-items:center; gap:8px;
-  background:rgba(255, 255, 255, 0.12); border:1px solid rgba(255, 255, 255, 0.2);
-  border-radius:30px; padding:6px 20px; margin-top:6px;
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,0.12); border:1px solid rgba(201,151,26,0.4);
+  border-radius:30px; padding:6px 18px; margin-top:6px; align-self:flex-start;
 }
-.d-wday { font-family:"Cinzel",serif; font-size:13px; font-weight:600; color:var(--white); text-transform: uppercase; }
+.d-wday { font-family:"Cinzel",serif; font-size:13px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:.08em; }
 .d-orn  { color:var(--accent-gold); font-size:10px; }
-
 .d-count { display:flex; align-items:center; gap:8px; padding:16px 24px 4px; }
 .d-count hr { flex:1; border:none; border-top:1px solid var(--border-light); }
-.d-count span { font-family:"Cinzel",serif; font-size:11px; color:var(--purple-mid); font-weight:700; letter-spacing:.1em; white-space:nowrap; }
-
+.d-count span { font-family:"Cinzel",serif; font-size:11px; color:var(--red-mid); font-weight:700; letter-spacing:.1em; white-space:nowrap; }
 .d-events { padding:8px 24px 24px; display:flex; flex-direction:column; gap:10px; }
 .d-event {
-  background: #fbf9fc; border-radius:10px; padding:14px 16px;
+  background:#fdf8f4; border-radius:10px; padding:14px 16px;
   display:grid; grid-template-columns:70px 1fr; align-items:center; gap:16px;
   border:1px solid var(--border-light); position:relative; overflow:hidden;
   transition:transform .15s,box-shadow .15s;
 }
-.d-event::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--purple-mid); border-radius:4px 0 0 4px; }
-.d-event:hover { transform:translateX(2px); box-shadow:0 4px 12px rgba(75, 18, 109, 0.08); }
-
-.d-date-box {
-  background: var(--purple-soft); border-radius: 8px; padding: 8px 6px; text-align: center;
-}
-.d-date-num { font-family:"Cinzel",serif; font-size:16px; font-weight:700; color:var(--purple-mid); }
-
+.d-event::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--red-mid); border-radius:4px 0 0 4px; }
+.d-event:hover { transform:translateX(2px); box-shadow:0 4px 12px rgba(139,26,13,0.09); }
+.d-date-box { background:var(--red-soft); border-radius:8px; padding:8px 6px; text-align:center; }
+.d-date-num { font-family:"Cinzel",serif; font-size:16px; font-weight:700; color:var(--red-mid); }
 .d-einfo { min-width:0; }
 .d-ename { font-size:15px; font-weight:600; color:var(--text-dark); line-height:1.3; }
 .d-eobs  { font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.3; }
-
 .d-foot {
-  background:var(--purple-soft);
+  background:var(--red-soft);
   border-top:1px solid var(--border-light);
   padding:14px 28px; display:flex; justify-content:space-between; align-items:center;
 }
-.d-motto  { font-family:"Cinzel",serif; font-size:11px; color:var(--purple-mid); font-weight:700; letter-spacing:.1em; }
-.d-freg   { font-size:10px; color:var(--text-muted); }
-
+.d-motto { font-family:"Cinzel",serif; font-size:11px; color:var(--red-mid); font-weight:700; letter-spacing:.1em; }
+.d-freg  { font-size:10px; color:var(--text-muted); }
 .empty { text-align:center; padding:32px 0; color:var(--text-muted); font-family:"Cinzel",serif; font-size:12px; letter-spacing:.08em; }
 </style>
 </head>
 <body>
-
 <!-- ════ MOBILE ════ -->
 <div class="app-mobile" id="app-mobile">
   <div class="m-bar">
@@ -267,155 +238,102 @@ body {
       <div class="m-org">Filhas de Jó Internacional</div>
     </div>
   </div>
-
   <div class="m-months" id="m-months"></div>
-
   <div class="m-datelabel">
     <span class="m-orn">❖</span>
     <span class="m-wday" id="m-wday">MÊS</span>
     <span class="m-orn">❖</span>
   </div>
-
   <div class="m-count">
     <hr>
     <span id="m-count-lbl">EVENTOS</span>
     <hr>
   </div>
-
   <div class="m-list" id="m-list"></div>
-
   <div class="m-foot">
     <div class="m-motto">As Filhas Mais Belas à Vista de Deus</div>
   </div>
 </div>
-
 <!-- ════ DESKTOP ════ -->
 <div class="app-desktop" id="app-desktop">
   <div class="d-sel">
     <label>MÊS:</label>
     <div id="d-pills" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
   </div>
-
   <div class="d-card">
     <div class="d-head">
       <img class="d-logo" src="logo-beatriz-pereira.png" alt="Bethel 14 Logo">
-      <div class="d-sub">Agenda de Eventos e Reuniões</div>
-      <div class="d-title">Bethel 14 Agnes de São Paulo</div>
-      <div class="d-org">Filhas de Jó Internacional</div>
-      <div class="d-badge">
-        <span class="d-orn">❖</span>
-        <span class="d-wday" id="d-wday">MÊS</span>
-        <span class="d-orn">❖</span>
+      <div class="d-head-text">
+        <div class="d-sub">Agenda de Eventos e Reuniões</div>
+        <div class="d-title">Bethel 14 Agnes de São Paulo</div>
+        <div class="d-org">Filhas de Jó Internacional</div>
+        <div class="d-badge">
+          <span class="d-orn">❖</span>
+          <span class="d-wday" id="d-wday">MÊS</span>
+          <span class="d-orn">❖</span>
+        </div>
       </div>
     </div>
-
     <div class="d-count">
       <hr>
       <span id="d-count-lbl">EVENTOS DO MÊS</span>
       <hr>
     </div>
-
     <div class="d-events" id="d-events"></div>
-
     <div class="d-foot">
       <div class="d-motto">"As Filhas Mais Belas à Vista de Deus"</div>
       <div class="d-freg">Bethel #14 - Agnes de São Paulo</div>
     </div>
   </div>
 </div>
-
 <script>
-// Dados fornecidos da planilha
 const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQoLwALa0byceSMwbu_D8raOh-A3jNAMriX1WX4UmAxF-ebcVySG6KGQ0tUh6X3ljrM3E_x3GTdr-N9/pub?gid=0&single=true&output=csv";
-
 let dadosBrutos = [];
-
 let mesesDisponiveis = [];
 let mesSelecionado = "";
-
-// Parser CSV com suporte a campos entre aspas e vírgulas nas observações.
 function csvParse(txt) {
   const rows = [];
-  let row = [];
-  let field = "";
-  let quoted = false;
-
+  let row = [], field = "", quoted = false;
   for (let i = 0; i < txt.length; i++) {
-    const ch = txt[i];
-    const next = txt[i + 1];
-
-    if (ch === '"' && quoted && next === '"') {
-      field += '"';
-      i++;
-    } else if (ch === '"') {
-      quoted = !quoted;
-    } else if (ch === ',' && !quoted) {
-      row.push(field.trim());
-      field = "";
-    } else if ((ch === "\n" || ch === "\r") && !quoted) {
+    const ch = txt[i], next = txt[i + 1];
+    if (ch === '"' && quoted && next === '"') { field += '"'; i++; }
+    else if (ch === '"') { quoted = !quoted; }
+    else if (ch === ',' && !quoted) { row.push(field.trim()); field = ""; }
+    else if ((ch === "\n" || ch === "\r") && !quoted) {
       if (ch === "\r" && next === "\n") i++;
-      row.push(field.trim());
-      field = "";
+      row.push(field.trim()); field = "";
       if (row.some(v => v !== "")) rows.push(row);
       row = [];
-    } else {
-      field += ch;
-    }
+    } else { field += ch; }
   }
-
-  if (field !== "" || row.length) {
-    row.push(field.trim());
-    if (row.some(v => v !== "")) rows.push(row);
-  }
-
+  if (field !== "" || row.length) { row.push(field.trim()); if (row.some(v => v !== "")) rows.push(row); }
   return rows;
 }
-
 function csvParaDados(csv) {
   const rows = csvParse(csv);
   if (rows.length < 2) return [];
-
-  const header = rows[0].map(v => v
-    .replace(/^\uFEFF/, "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-  );
-
+  const header = rows[0].map(v => v.replace(/^﻿/,"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim());
   const iMes = header.findIndex(v => v === "mes");
   const iData = header.findIndex(v => v === "data");
   const iEvento = header.findIndex(v => v.includes("evento"));
   const iObs = header.findIndex(v => v.includes("observacoes"));
-
-  if (iMes < 0 || iData < 0 || iEvento < 0) {
-    throw new Error("Cabeçalhos esperados não encontrados na planilha.");
-  }
-
+  if (iMes < 0 || iData < 0 || iEvento < 0) throw new Error("Cabeçalhos não encontrados.");
   return rows.slice(1).map(r => ({
-    mes: (r[iMes] || "").trim().toUpperCase(),
-    data: (r[iData] || "").trim(),
-    evento: (r[iEvento] || "").trim(),
-    obs: iObs >= 0 ? (r[iObs] || "").trim() : ""
+    mes: (r[iMes]||"").trim().toUpperCase(),
+    data: (r[iData]||"").trim(),
+    evento: (r[iEvento]||"").trim(),
+    obs: iObs >= 0 ? (r[iObs]||"").trim() : ""
   })).filter(item => item.mes && item.data && item.evento);
 }
-
-
-function isMobile() {
-  return window.innerWidth <= 768;
-}
-
+function isMobile() { return window.innerWidth <= 768; }
 function ajustarLayout() {
   const mobile = isMobile();
   document.getElementById('app-mobile').classList.toggle('on', mobile);
   document.getElementById('app-desktop').classList.toggle('on', !mobile);
 }
-
 window.addEventListener('resize', ajustarLayout);
 ajustarLayout();
-
 function inicializar() {
-  // Pega a lista de meses únicos mantendo a ordem
   mesesDisponiveis = [...new Set(dadosBrutos.map(item => item.mes))];
   if (mesesDisponiveis.length > 0) {
     mesSelecionado = mesesDisponiveis[0];
@@ -423,131 +341,75 @@ function inicializar() {
     renderizarEventos();
   }
 }
-
 function renderizarFiltros() {
   const mContainer = document.getElementById('m-months');
   const dContainer = document.getElementById('d-pills');
-  
-  mContainer.innerHTML = '';
-  dContainer.innerHTML = '';
-
-  // Opção "TODOS"
+  mContainer.innerHTML = ''; dContainer.innerHTML = '';
   const mTodos = document.createElement('button');
   mTodos.className = `m-pill ${mesSelecionado === 'TODOS' ? 'on' : ''}`;
-  mTodos.innerText = 'TODOS';
-  mTodos.onclick = () => selecionarMes('TODOS');
+  mTodos.innerText = 'TODOS'; mTodos.onclick = () => selecionarMes('TODOS');
   mContainer.appendChild(mTodos);
-
   const dTodos = document.createElement('button');
   dTodos.className = `d-pill ${mesSelecionado === 'TODOS' ? 'on' : ''}`;
-  dTodos.innerText = 'TODOS';
-  dTodos.onclick = () => selecionarMes('TODOS');
+  dTodos.innerText = 'TODOS'; dTodos.onclick = () => selecionarMes('TODOS');
   dContainer.appendChild(dTodos);
-
   mesesDisponiveis.forEach(mes => {
-    // Mobile
     const mBtn = document.createElement('button');
     mBtn.className = `m-pill ${mes === mesSelecionado ? 'on' : ''}`;
-    mBtn.innerText = mes;
-    mBtn.onclick = () => selecionarMes(mes);
+    mBtn.innerText = mes; mBtn.onclick = () => selecionarMes(mes);
     mContainer.appendChild(mBtn);
-
-    // Desktop
     const dBtn = document.createElement('button');
     dBtn.className = `d-pill ${mes === mesSelecionado ? 'on' : ''}`;
-    dBtn.innerText = mes;
-    dBtn.onclick = () => selecionarMes(mes);
+    dBtn.innerText = mes; dBtn.onclick = () => selecionarMes(mes);
     dContainer.appendChild(dBtn);
   });
 }
-
-function selecionarMes(mes) {
-  mesSelecionado = mes;
-  renderizarFiltros();
-  renderizarEventos();
-}
-
+function selecionarMes(mes) { mesSelecionado = mes; renderizarFiltros(); renderizarEventos(); }
 function renderizarEventos() {
-  let eventos = mesSelecionado === 'TODOS' 
-    ? [...dadosBrutos] 
-    : dadosBrutos.filter(d => d.mes === mesSelecionado);
-
-  // Ordena por data dentro do grupo selecionado
+  let eventos = mesSelecionado === 'TODOS' ? [...dadosBrutos] : dadosBrutos.filter(d => d.mes === mesSelecionado);
   eventos.sort((a, b) => {
     const [diaA, mesA] = a.data.split('/').map(Number);
     const [diaB, mesB] = b.data.split('/').map(Number);
     return (mesA - mesB) || (diaA - diaB);
   });
-
-  const txtCabecalho = mesSelecionado === 'TODOS' ? 'TODOS OS MESES' : mesSelecionado;
-  document.getElementById('m-wday').innerText = txtCabecalho;
-  document.getElementById('d-wday').innerText = txtCabecalho;
-
+  const txt = mesSelecionado === 'TODOS' ? 'TODOS OS MESES' : mesSelecionado;
+  document.getElementById('m-wday').innerText = txt;
+  document.getElementById('d-wday').innerText = txt;
   document.getElementById('m-count-lbl').innerText = `${eventos.length} EVENTO(S)`;
   document.getElementById('d-count-lbl').innerText = `${eventos.length} EVENTO(S) ENCONTRADO(S)`;
-
   const mList = document.getElementById('m-list');
   const dEvents = document.getElementById('d-events');
-  mList.innerHTML = '';
-  dEvents.innerHTML = '';
-
+  mList.innerHTML = ''; dEvents.innerHTML = '';
   if (eventos.length === 0) {
-    const emptyMsg = '<div class="empty">Nenhum evento registrado para este período.</div>';
-    mList.innerHTML = emptyMsg;
-    dEvents.innerHTML = emptyMsg;
-    return;
+    const msg = '<div class="empty">Nenhum evento registrado para este período.</div>';
+    mList.innerHTML = msg; dEvents.innerHTML = msg; return;
   }
-
   eventos.forEach(item => {
-    // Mobile
     const mCard = document.createElement('div');
     mCard.className = 'm-card';
-    mCard.innerHTML = `
-      <div class="m-date-box">
-        <div class="m-date-num">${item.data}</div>
-      </div>
-      <div class="m-info">
-        <div class="m-name">${item.evento}</div>
-        ${item.obs ? `<div class="m-obs">${item.obs}</div>` : ''}
-      </div>
-    `;
+    mCard.innerHTML = `<div class="m-date-box"><div class="m-date-num">${item.data}</div></div><div class="m-info"><div class="m-name">${item.evento}</div>${item.obs ? `<div class="m-obs">${item.obs}</div>` : ''}</div>`;
     mList.appendChild(mCard);
-
-    // Desktop
     const dEvent = document.createElement('div');
     dEvent.className = 'd-event';
-    dEvent.innerHTML = `
-      <div class="d-date-box">
-        <div class="d-date-num">${item.data}</div>
-      </div>
-      <div class="d-einfo">
-        <div class="d-ename">${item.evento}</div>
-        ${item.obs ? `<div class="d-eobs">${item.obs}</div>` : ''}
-      </div>
-    `;
+    dEvent.innerHTML = `<div class="d-date-box"><div class="d-date-num">${item.data}</div></div><div class="d-einfo"><div class="d-ename">${item.evento}</div>${item.obs ? `<div class="d-eobs">${item.obs}</div>` : ''}</div>`;
     dEvents.appendChild(dEvent);
   });
 }
-
 async function carregarDados() {
   try {
     const resposta = await fetch(`${CSV}&_=${Date.now()}`, { cache: "no-store" });
     if (!resposta.ok) throw new Error(`Erro HTTP ${resposta.status}`);
-
     const csv = await resposta.text();
     dadosBrutos = csvParaDados(csv);
-
-    if (!dadosBrutos.length) throw new Error("Nenhum evento encontrado na planilha.");
-
+    if (!dadosBrutos.length) throw new Error("Nenhum evento encontrado.");
     inicializar();
   } catch (erro) {
-    console.error("Erro ao carregar o Google Sheets:", erro);
-    const mensagem = `<div class="empty">Não foi possível carregar a agenda.<br><small style="font-family:Inter,sans-serif;font-size:10px;opacity:.7">Verifique se a planilha continua publicada na Web.</small></div>`;
-    document.getElementById("m-list").innerHTML = mensagem;
-    document.getElementById("d-events").innerHTML = mensagem;
+    console.error("Erro ao carregar:", erro);
+    const msg = `<div class="empty">Não foi possível carregar a agenda.<br><small style="font-family:Inter,sans-serif;font-size:10px;opacity:.7">Verifique se a planilha continua publicada na Web.</small></div>`;
+    document.getElementById("m-list").innerHTML = msg;
+    document.getElementById("d-events").innerHTML = msg;
   }
 }
-
 carregarDados();
 </script>
 </body>
