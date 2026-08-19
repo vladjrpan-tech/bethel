@@ -291,7 +291,7 @@ body {
   <div class="m-bar">
     <img class="m-logo" src="logo-beatriz-pereira.png" alt="Bethel 14 Logo">
     <div class="m-titles">
-      <div class="m-sub">Agenda do Bethel - 36ª GESTÃO</div>
+      <div class="m-sub">Agenda do Bethel</div>
       <div class="m-title">Bethel 14 Agnes de São Paulo</div>
       <div class="m-org">Filhas de Jó Internacional</div>
     </div>
@@ -322,7 +322,7 @@ body {
     <div class="d-head">
       <img class="d-logo" src="logo-beatriz-pereira.png" alt="Bethel 14 Logo">
       <div class="d-head-text">
-        <div class="d-sub">Agenda de Eventos e Reuniões - 36ª GESTÃO</div>
+        <div class="d-sub">Agenda de Eventos e Reuniões</div>
         <div class="d-title">Bethel 14 Agnes de São Paulo</div>
         <div class="d-org">Filhas de Jó Internacional</div>
         <div class="d-badge">
@@ -424,26 +424,25 @@ function renderizarFiltros() {
 }
 function selecionarMes(mes) { mesSelecionado = mes; renderizarFiltros(); renderizarEventos(); }
 
-// Retorna o índice (dentro de `lista`) do próximo evento a acontecer (>= hoje)
-function encontrarProximoIdx(lista) {
+// Encontra o próximo evento GLOBALMENTE (em dadosBrutos) e retorna {data, evento}
+function encontrarProximoGlobal() {
   const hoje = new Date();
   hoje.setHours(0,0,0,0);
   const ano = hoje.getFullYear();
-  let proximoIdx = -1;
+  let proximoItem = null;
   let proximaData = null;
-  lista.forEach((item, i) => {
+  dadosBrutos.forEach(item => {
     const partes = item.data.split('/').map(Number);
     if (partes.length < 2) return;
     const [dia, mes] = partes;
-    // Tenta ano atual; se já passou, tenta próximo ano
     let d = new Date(ano, mes - 1, dia);
     if (d < hoje) d = new Date(ano + 1, mes - 1, dia);
     if (proximaData === null || d < proximaData) {
       proximaData = d;
-      proximoIdx = i;
+      proximoItem = item;
     }
   });
-  return proximoIdx;
+  return proximoItem;
 }
 
 function renderizarEventos() {
@@ -466,11 +465,14 @@ function renderizarEventos() {
     mList.innerHTML = msg; dEvents.innerHTML = msg; return;
   }
 
-  const proximoIdx = encontrarProximoIdx(eventos);
+  const proximoGlobal = encontrarProximoGlobal();
   const badge = `<span class="next-badge">PRÓXIMO EVENTO</span>`;
 
   eventos.forEach((item, i) => {
-    const isProximo = i === proximoIdx;
+    // só destaca se for exatamente o próximo evento global
+    const isProximo = proximoGlobal
+      && item.data === proximoGlobal.data
+      && item.evento === proximoGlobal.evento;
     const extraClass = isProximo ? ' next-event' : '';
 
     const mCard = document.createElement('div');
